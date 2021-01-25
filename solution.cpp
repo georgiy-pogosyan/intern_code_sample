@@ -25,15 +25,6 @@ void CoverComponent(
     }
 }
 
-void FindRepresentatives(vector<int>& representative, const vector<int>& component) {
-    int number_of_vertices = component.size() - 1;
-    for (int vertex = 1; vertex <= number_of_vertices; ++vertex) {
-        if (representative[component[vertex]] == -1) {
-            representative[component[vertex]] = vertex;
-        }
-    }
-}
-
 void PrintAdditionalEdges(const vector<int>& representative)
 {
     int number_of_components = representative.size() - 1;
@@ -60,20 +51,19 @@ int main() {
         neighbours_for_vertex[vertex1].insert(vertex2);
         neighbours_for_vertex[vertex2].insert(vertex1);
     }
- 
+
+    vector<int> member_for_component(1);
     int cur_component = 0;
     for (int vertex = 1; vertex <= number_of_vertices; ++vertex) {
         if (component_for_vertex[vertex] == -1) {
             ++cur_component;
+            member_for_component.push_back(vertex);
             CoverComponent(
                 vertex, neighbours_for_vertex,
                 used,component_for_vertex, cur_component
             );
         }
     }
-
-    vector<int> member_for_component(cur_component + 1, -1);
-    FindRepresentatives(member_for_component, component_for_vertex);
 
     PrintAdditionalEdges(member_for_component);
 
